@@ -1,6 +1,8 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 function App() {
     return (
-        <p>Hello world</p>
+        <h1>Hello world</h1>
     )
 }
 
