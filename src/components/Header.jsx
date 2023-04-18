@@ -7,9 +7,11 @@ import {userLogout} from "../features/user/userSlice.js";
 
 export default function Header() {
     const isAuthenticated = useSelector(state => state.user.isAuthenticated);
+    const isReviewer = useSelector(state => state.user.isReviewer);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const isProfile = Boolean(useMatch('/profile')) || Boolean(useMatch('/update-password'));
+    const isRestaurants = Boolean(useMatch('/restaurants/verification'))
 
     function logout() {
         axiosInstance.post('api/token/blacklist/', {
@@ -33,6 +35,19 @@ export default function Header() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/" active={Boolean(useMatch('/'))}>Home</Nav.Link>
+                        {
+                            isAuthenticated
+                            &&
+                            <NavDropdown title="Restaurants" active={isRestaurants}>
+                                {
+                                    isReviewer
+                                    &&
+                                    <NavDropdown.Item as={Link} to="/restaurants/verification"
+                                                      active={Boolean(useMatch('/restaurants/verification'))}
+                                    >Verification</NavDropdown.Item>
+                                }
+                            </NavDropdown>
+                        }
                     </Nav>
                     <Nav>
                         {isAuthenticated ?
