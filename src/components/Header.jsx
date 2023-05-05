@@ -35,6 +35,8 @@ export default function Header() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/" active={Boolean(useMatch('/'))}>Home</Nav.Link>
+                        <Nav.Link as={Link} to="/restaurant" active={Boolean(useMatch('/'))}>Restaurants Reviewer</Nav.Link>
+
                         {
                             isAuthenticated
                             &&

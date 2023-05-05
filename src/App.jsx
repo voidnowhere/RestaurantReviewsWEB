@@ -9,6 +9,7 @@ import Home from "./components/Home.jsx";
 import {useSelector} from "react-redux";
 import Restaurant from "./components/Restaurant.jsx";
 import RestaurantsVerification from "./components/RestaurantsVerification.jsx";
+import Ratings from "./components/Ratings.jsx";
 
 function App() {
     const isAuthenticated = useSelector(state => state.user.isAuthenticated);
@@ -16,9 +17,10 @@ function App() {
 
     return (
         <BrowserRouter>
-            <Routes>
+            <Routes>y
                 <Route path="/" element={<Home/>}/>
                 <Route path="/restaurant" element={<Restaurant/>}/>
+                <Route path='/ratings/:restaurantId' element={<Ratings/>}/>
                 <Route path="/login" element={(isAuthenticated) ? <Navigate to="/"/> : <Login/>}/>
                 <Route path="/register" element={(isAuthenticated) ? <Navigate to="/"/> : <Register/>}/>
                 <Route path="/profile" element={(!isAuthenticated) ? <Navigate to="/login"/> : <ProfileInformation/>}/>
