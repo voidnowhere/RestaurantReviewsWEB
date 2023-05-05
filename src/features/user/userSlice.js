@@ -8,13 +8,10 @@ export const userSlice = createSlice({
         isReviewer: localStorage.getItem('user_type') === 'R',
     },
     reducers: {
-        userLogin: (state, action) => {
-            state.isAuthenticated = true;
-            if (action.payload.userType === 'C') {
-                state.isCustomer = true;
-            } else if (action.payload.userType === 'R') {
-                state.isReviewer = true;
-            }
+        userLogin: state => {
+            state.isAuthenticated = localStorage.getItem('access_token') !== null;
+            state.isCustomer = localStorage.getItem('user_type') === 'C';
+            state.isReviewer = localStorage.getItem('user_type') === 'R';
         },
         userLogout: state => {
             state.isAuthenticated = false;
