@@ -2,12 +2,13 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import axiosInstance from "../axiosInstance.js";
 import { useEffect, useState } from 'react';
+
 export default function ListRestaurant () {
   const [cuisines, setCuisines] = useState([])
   useEffect(() => {
     fetch(`http://localhost:8000/api/restaurant/list`) 
       .then((response) => response.json()) 
-      .then((jsonData) => {setCuisines(jsonData); console.log(jsonData)}) 
+      .then((jsonData) => setCuisines(jsonData)) 
   }, []);
     return(
         <>
