@@ -30,7 +30,11 @@ export default function Header() {
     return (
         <Navbar bg="light" expand="lg" className="shadow">
             <Container>
-                <Navbar.Brand>Restaurant Reviews</Navbar.Brand>
+                <Navbar.Brand>
+                    <Link to="/">
+                        <img src="/logo.png" width="30" height="30" alt="logo"/>
+                    </Link>
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">

@@ -27,11 +27,6 @@ function RestaurantsVerification() {
         }
     }, [currentRestaurantId]);
 
-    function openMap(latitude, longitude) {
-        window.open(`
-            https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`, "_blank");
-    }
-
     function verify(e, id) {
         Confirm.show(
             'Confirm',
@@ -52,24 +47,20 @@ function RestaurantsVerification() {
     return (
         <>
             <Header/>
-            <Container className="mt-5">
+            <Container className="mt-5 pb-5">
                 <h3>Restaurants verification</h3>
                 <div className="d-flex justify-content-center flex-wrap gap-5 mt-4">
                     {restaurants.map((restaurant) => (
                         <Card key={restaurant.id} style={{width: '18rem'}}>
                             <Card.Img variant="top" src={restaurant.image}/>
                             <Card.Body>
-                                <Card.Title>{restaurant.name}</Card.Title>
+                                <Card.Title>{restaurant.city} {restaurant.name}</Card.Title>
                                 <div className="d-flex align-items-center justify-content-evenly">
                                     <Form.Check type="switch" label="Verified"
                                                 onChange={(e) => verify(e, restaurant.id)}
                                                 defaultChecked={restaurant.is_verified}/>
                                     <Button variant="primary" onClick={() => setCurrentRestaurantId(restaurant.id)}>
                                         <i className="bi bi-card-list"></i>
-                                    </Button>
-                                    <Button variant="success"
-                                            onClick={() => openMap(restaurant.latitude, restaurant.longitude)}>
-                                        <i className="bi bi-geo-alt"></i>
                                     </Button>
                                 </div>
                             </Card.Body>
@@ -91,13 +82,13 @@ function RestaurantsVerification() {
                                 <Form.Control type="text" readOnly value={currentRestaurant.cuisines}
                                               placeholder="Cuisines"/>
                             </FloatingLabel>
-                            <FloatingLabel label="Price range" className="mb-3">
-                                <Form.Control type="text" readOnly value={currentRestaurant.price_range}
-                                              placeholder="Price range"/>
+                            <FloatingLabel label="City" className="mb-3">
+                                <Form.Control type="text" readOnly value={currentRestaurant.city}
+                                              placeholder="City"/>
                             </FloatingLabel>
-                            <FloatingLabel label="Meals" className="mb-3">
-                                <Form.Control type="text" readOnly value={currentRestaurant.meals}
-                                              placeholder="Meals"/>
+                            <FloatingLabel label="Description" className="mb-3">
+                                <Form.Control type="text" readOnly value={currentRestaurant.description}
+                                              placeholder="Cuisines"/>
                             </FloatingLabel>
                             <FloatingLabel label="Address" className="mb-3">
                                 <Form.Control type="text" readOnly value={currentRestaurant.address}
