@@ -53,8 +53,8 @@ function RestaurantsVerification() {
                     {restaurants.map((restaurant) => (
                         <Card key={restaurant.id} style={{width: '18rem'}}>
                             <Card.Img variant="top" src={restaurant.image}/>
-                            <Card.Body>
-                                <Card.Title>{restaurant.city} {restaurant.name}</Card.Title>
+                            <Card.Body className="d-flex flex-column">
+                                <Card.Title className="flex-grow-1">{restaurant.city} {restaurant.name}</Card.Title>
                                 <div className="d-flex align-items-center justify-content-evenly">
                                     <Form.Check type="switch" label="Verified"
                                                 onChange={(e) => verify(e, restaurant.id)}
