@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import axiosInstance from "../axiosInstance.js";
 import {Confirm} from 'notiflix/build/notiflix-confirm-aio';
 import {Notify} from 'notiflix/build/notiflix-notify-aio';
-
+import {Link} from "react-router-dom";
 
 function RestaurantsVerification() {
     const [restaurants, setRestaurants] = useState([]);
@@ -13,14 +13,14 @@ function RestaurantsVerification() {
     const [showDetailModal, setShowDetailModal] = useState(false);
 
     useEffect(() => {
-        axiosInstance.get('api/restaurants/verification/').then((response) => {
+        axiosInstance.get('api/reviewers/restaurants/').then((response) => {
             setRestaurants(response.data);
         });
     }, []);
 
     useEffect(() => {
         if (currentRestaurantId !== null) {
-            axiosInstance.get(`api/restaurants/verification/${currentRestaurantId}/`).then((response) => {
+            axiosInstance.get(`api/reviewers/restaurants/${currentRestaurantId}/`).then((response) => {
                 setCurrentRestaurant(response.data);
                 setShowDetailModal(true);
             });
@@ -34,7 +34,7 @@ function RestaurantsVerification() {
             'Yes',
             'No',
             () => {
-                axiosInstance.patch(`api/restaurants/verification/${id}/verify`).then(() => {
+                axiosInstance.patch(`api/reviewers/restaurants/${id}/verify`).then(() => {
                     Notify.success(`Restaurant ${(e.target.checked) ? 'verified' : 'unverified'} successfully.`, {position: 'center-bottom'});
                 });
             },
@@ -56,11 +56,16 @@ function RestaurantsVerification() {
                             <Card.Body className="d-flex flex-column">
                                 <Card.Title className="flex-grow-1">{restaurant.city} {restaurant.name}</Card.Title>
                                 <div className="d-flex align-items-center justify-content-evenly">
-                                    <Form.Check type="switch" label="Verified"
-                                                onChange={(e) => verify(e, restaurant.id)}
-                                                defaultChecked={restaurant.is_verified}/>
-                                    <Button variant="primary" onClick={() => setCurrentRestaurantId(restaurant.id)}>
-                                        <i className="bi bi-card-list"></i>
+                                    <Form.Check type="switch" label="Verified" defaultChecked={restaurant.is_verified}
+                                                onChange={(e) => verify(e, restaurant.id)}/>
+                                    <Link to={`/verifications/${restaurant.id}/ratings`}>
+                                        <Button variant="outline-primary" size="sm">
+                                            <i className="bi bi-clipboard2-pulse-fill">{' ' + restaurant.unverified_ratings_count}</i>
+                                        </Button>
+                                    </Link>
+                                    <Button variant="outline-primary" size="sm"
+                                            onClick={() => setCurrentRestaurantId(restaurant.id)}>
+                                        <i className="bi bi-credit-card-2-front-fill"></i>
                                     </Button>
                                 </div>
                             </Card.Body>
