@@ -91,7 +91,7 @@ function Restaurant() {
                             </p>
                         </div>
                         <div>
-                            <h4>Phone number</h4>
+                            <h4>Website</h4>
                             <p>
                                 <a href={restaurant.website}>{restaurant.website}</a>
                             </p>
