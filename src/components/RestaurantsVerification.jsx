@@ -49,9 +49,9 @@ function RestaurantsVerification() {
             <Header/>
             <Container className="mt-5 pb-5">
                 <h3>Restaurants verification</h3>
-                <div className="d-flex justify-content-center flex-wrap gap-5 mt-4">
+                <div className="d-flex justify-content-center flex-wrap gap-5 mt-4 justify-content-center">
                     {restaurants.map((restaurant) => (
-                        <Card key={restaurant.id} style={{width: '18rem'}}>
+                        <Card key={restaurant.id} style={{width: '18rem'}} className="shadow">
                             <Card.Img variant="top" src={restaurant.image}/>
                             <Card.Body className="d-flex flex-column">
                                 <Card.Title className="flex-grow-1">{restaurant.city} {restaurant.name}</Card.Title>

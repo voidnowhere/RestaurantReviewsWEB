@@ -46,7 +46,7 @@ function RatingsVerification() {
     return (
         <>
             <Header/>
-            <Container className="mt-5 d-flex gap-2 flex-column">
+            <Container className="mt-5 d-flex gap-2 flex-column pb-5">
                 {
                     restaurant
                     &&

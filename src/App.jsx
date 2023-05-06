@@ -9,7 +9,7 @@ import Home from "./components/Home.jsx";
 import {useSelector} from "react-redux";
 import RestaurantsVerification from "./components/RestaurantsVerification.jsx";
 import RatingsVerification from "./components/RatingsVerification.jsx";
-import Restaurant from './components/Restaurant.jsx';
+import Restaurant from "./components/Restaurant.jsx";
 
 function App() {
     const isAuthenticated = useSelector(state => state.user.isAuthenticated);
@@ -29,11 +29,7 @@ function App() {
             path: "/verifications/:restaurantId/ratings",
             element: (!isAuthenticated && !isReviewer) ? <Navigate to="/login"/> : <RatingsVerification/>,
         },
-        {
-            path: "/restaurant/:nom",
-            element: <Restaurant/>,
-        },
-
+        {path: "/restaurants/:restaurantId", element: <Restaurant/>,},
     ]);
 
     return (
