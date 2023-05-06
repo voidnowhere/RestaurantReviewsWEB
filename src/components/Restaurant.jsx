@@ -6,8 +6,12 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
+import Rating from "react-rating";
+import full from './images/full-star.png'
+import empty from './images/empty-star.png'
 
 export default function Restaurant (){
+    
     const routeParams = useParams();
     const [data, setData] = useState([])
     const [dataComments, setDataComments] = useState([])
@@ -72,6 +76,11 @@ export default function Restaurant (){
         Envoyer
       </Button>
     </Form>
+
+    <Rating
+  emptySymbol={<img src={empty} className="icon" />}
+  fullSymbol={<img src={full} className="icon" />}
+  onChange={(rate)=> alert(rate)}/>
      </div>
 
      </>   
