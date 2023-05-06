@@ -1,88 +1,132 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Card from 'react-bootstrap/Card';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import axios from "axios";
+import Header from "./Header.jsx";
+import {useNavigate, useParams} from "react-router-dom";
+import {useEffect, useRef, useState} from "react";
+import {Button, Card, Container, Form, Image} from "react-bootstrap";
+import axiosInstance from "../axiosInstance.js";
+import emptyStar from "../assets/empty-star.png";
+import fullStar from "../assets/full-star.png";
 import Rating from "react-rating";
-import full from './images/full-star.png'
-import empty from './images/empty-star.png'
+import {Report} from 'notiflix/build/notiflix-report-aio';
+import {useSelector} from "react-redux";
+import {Confirm} from 'notiflix/build/notiflix-confirm-aio';
 
-export default function Restaurant (){
-    
-    const routeParams = useParams();
-    const [data, setData] = useState([])
-    const [dataComments, setDataComments] = useState([])
 
-    const [comments, setComments] = useState([])
-    const [id, setId] = useState('')
-    const [image, setImage] = useState('')
-    useEffect(()=>{
-    fetch(`http://localhost:8000/api/restaurant/list`)
-    .then((response) => response.json())
-    .then((data)=> setData(data));
+function Restaurant() {
+    const isAuthenticated = useSelector(state => state.user.isAuthenticated);
+    const [restaurant, setRestaurant] = useState(null);
+    const {restaurantId} = useParams();
+    const commentRef = useRef();
+    const [stars, setStars] = useState(0);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        getRestaurant();
     }, []);
 
-    const fetching = (id)=>{
-        fetch(`http://127.0.0.1:8000/api/restaurant/comment/${id}/`)
-        .then((response) => response.json())
-        .then((data)=> {setDataComments(data);setId(id)});
-        }
+    function getRestaurant() {
+        axiosInstance.get(`api/restaurants/${restaurantId}/`).then((response) => {
+            setRestaurant(response.data);
+        });
+    }
 
-        const handleSubmit = ()=>{
-            event.preventDefault();
-                axios.post(`http://127.0.0.1:8000/api/restaurant/comments/${id}/`,{
-                comments:comments
-            })
-            setComments('')
-            }
-    
+    function handleSubmit(event) {
+        event.preventDefault();
+        if (!isAuthenticated) {
+            Confirm.show(
+                'Confirm',
+                'You need to be logged in to submit your rating.',
+                'Yes',
+                'No',
+                () => {
+                    navigate('/login');
+                },
+            );
+            return;
+        }
+        if (commentRef.current.value.length === 0) {
+            Report.failure(
+                'Failure',
+                'You comment is required!',
+                'Okay',
+                {backOverlay: false},
+            );
+            return;
+        }
+        axiosInstance.post('api/ratings/', {
+            restaurant: restaurant.id,
+            comment: commentRef.current.value.trim(),
+            stars: stars,
+        }).then(() => {
+            Report.success(
+                'Success',
+                'Your rating will soon get verified.',
+                'Okay',
+                {backOverlay: false},
+            );
+            commentRef.current.value = '';
+            setStars(0);
+            getRestaurant();
+        });
+    }
+
     return (
-     <>
-     <h1 style={{textAlign:"center", marginBottom:"50px", marginTop:"50px"}}>{routeParams.nom}</h1>
-
-     <div>
-        {data.map((dataImage , i) => (
-            dataImage.nom == routeParams.nom ? (<> <img src={'https://www.bestrestaurantsmaroc.com/'+dataImage.imagesI} alt={routeParams.nom} style={{width:"50%", display:"block",marginLeft:"auto" , marginRight:"auto"}}/>
-            <h2>{dataImage.cuisines}</h2>
-            <h3>Range price : {dataImage.prix}</h3>
-            <h4>{dataImage.phone}</h4>
-            <h4>{dataImage.web}</h4>
-            <h5> l'Adresse : {dataImage.adresse}</h5>
-            <h6> MENU : {dataImage.menu.split(",").join("\n")} </h6>
-            {fetching(i+1)}
-            </>):null 
-        ))}
-        
-        <h2> Comments </h2>
-        {dataComments.comments?.map((data)=>( <Card>
-            <Card.Body>{data.comments}</Card.Body>
-             </Card>))
-        }
-
-    <Form method="POST" onSubmit={handleSubmit}>
-      <FloatingLabel controlId="floatingTextarea2" label="Comments">
-        <Form.Control
-        value={comments}
-          as="textarea"
-          placeholder="Leave a comment here"
-          style={{ height: '100px' }}
-          onChange={(e) => setComments(event.target.value)}
-        />
-      </FloatingLabel>
-      <Button variant="primary" type="submit">
-        Envoyer
-      </Button>
-    </Form>
-
-    <Rating
-  emptySymbol={<img src={empty} className="icon" />}
-  fullSymbol={<img src={full} className="icon" />}
-  onChange={(rate)=> alert(rate)}/>
-     </div>
-
-     </>   
-    );
+        <>
+            <Header/>
+            {
+                restaurant
+                &&
+                <Container className="mt-5 pb-5">
+                    <div className="d-flex flex-column align-items-center gap-3 mb-5">
+                        <Image src={restaurant.image} className="shadow-lg" rounded fluid/>
+                        <h3>{restaurant.city + ' ' + restaurant.name}</h3>
+                        <Rating initialRating={restaurant.rating} start={0} stop={5} fractions={1}
+                                emptySymbol={<img src={emptyStar} className="icon"/>}
+                                fullSymbol={<img src={fullStar} className="icon"/>} readonly={true}/>
+                    </div>
+                    <Form className="mb-3">
+                        <div className="d-flex justify-content-between">
+                            <h5>Your rate</h5>
+                            <Rating start={0} stop={5} initialRating={stars}
+                                    onChange={value => setStars(value)}
+                                    emptySymbol={<img src={emptyStar} className="icon"/>}
+                                    fullSymbol={<img src={fullStar} className="icon"/>}/>
+                        </div>
+                        <Form.Control ref={commentRef} as="textarea" rows={3} className="mb-2"/>
+                        <div className="d-flex justify-content-end">
+                            <Button variant="outline-primary" type="submit" size="sm"
+                                    onClick={handleSubmit}>Submit</Button>
+                        </div>
+                    </Form>
+                    <div className="d-flex flex-column gap-3">
+                        {
+                            restaurant.ratings.map((rating, index) => (
+                                <Card key={index}>
+                                    <Card.Header className="d-flex flex-column flex-sm-row gap-3">
+                                        <div className="d-flex gap-2">
+                                            <i className="bi bi-person-circle"></i>
+                                            <span>{rating.customer.email}</span>
+                                        </div>
+                                        <div className="d-flex gap-2 flex-grow-1">
+                                            <i className="bi bi-calendar-check"></i>
+                                            <span>{rating.created_at}</span>
+                                        </div>
+                                        <div>
+                                            <Rating initialRating={rating.stars}
+                                                    emptySymbol={<img src={emptyStar} className="icon"/>}
+                                                    fullSymbol={<img src={fullStar} className="icon"/>} readonly/>
+                                        </div>
+                                    </Card.Header>
+                                    <Card.Body className="d-flex align-items-center">
+                                        <Card.Text>{rating.comment}</Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            ))
+                        }
+                    </div>
+                </Container>
+            }
+        </>
+    )
 }
+
+export default Restaurant;
