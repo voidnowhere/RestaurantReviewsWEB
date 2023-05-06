@@ -1,4 +1,4 @@
-# Restaurant Reviews WEB
+# Restaurant Reviews WEB & [Restaurant Reviews API](https://github.com/voidnowhere/RestaurantReviewsAPI)
 
 ## `Clone repository`
 ```bash
