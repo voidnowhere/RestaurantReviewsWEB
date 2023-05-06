@@ -11,7 +11,6 @@ export default function Header() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const isProfile = Boolean(useMatch('/profile')) || Boolean(useMatch('/update-password'));
-    const isRestaurants = Boolean(useMatch('/restaurants/verification'))
 
     function logout() {
         axiosInstance.post('api/token/blacklist/', {
@@ -39,20 +38,14 @@ export default function Header() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/" active={Boolean(useMatch('/'))}>Home</Nav.Link>
-                        <Nav.Link as={Link} to="/restaurant" active={Boolean(useMatch('/'))}>Restaurants Reviewer</Nav.Link>
-
                         {
-                            isAuthenticated
+                            isAuthenticated && isReviewer
                             &&
-                            <NavDropdown title="Restaurants" active={isRestaurants}>
-                                {
-                                    isReviewer
-                                    &&
-                                    <NavDropdown.Item as={Link} to="/restaurants/verification"
-                                                      active={Boolean(useMatch('/restaurants/verification'))}
-                                    >Verification</NavDropdown.Item>
-                                }
-                            </NavDropdown>
+                            <Nav.Link as={Link} to="/verifications" active={
+                                Boolean(useMatch('verifications')) ||
+                                Boolean(useMatch('/verifications/:restaurantId/ratings'))
+                            }
+                            >Verifications</Nav.Link>
                         }
                     </Nav>
                     <Nav>
