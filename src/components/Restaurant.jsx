@@ -83,6 +83,30 @@ function Restaurant() {
                                 emptySymbol={<img src={emptyStar} className="icon"/>}
                                 fullSymbol={<img src={fullStar} className="icon"/>} readonly={true}/>
                     </div>
+                    <div className="d-flex flex-wrap gap-sm-3 justify-content-sm-around">
+                        <div>
+                            <h4>Phone number</h4>
+                            <p>
+                                <a href={"tel:" + restaurant.phone_number}>{restaurant.phone_number}</a>
+                            </p>
+                        </div>
+                        <div>
+                            <h4>Phone number</h4>
+                            <p>
+                                <a href={restaurant.website}>{restaurant.website}</a>
+                            </p>
+                        </div>
+                        <div>
+                            <h4>Address</h4>
+                            <p>{restaurant.address}</p>
+                        </div>
+                    </div>
+                    <div className="mb-4">
+                        <h4>Cuisines</h4>
+                        <p>{restaurant.cuisines}</p>
+                        <h4>Description</h4>
+                        <p>{restaurant.description}</p>
+                    </div>
                     <Form className="mb-3">
                         <div className="d-flex justify-content-between">
                             <h5>Your rate</h5>
