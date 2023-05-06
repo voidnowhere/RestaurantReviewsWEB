@@ -7,6 +7,7 @@ import {userLogout} from "../features/user/userSlice.js";
 
 export default function Header() {
     const isAuthenticated = useSelector(state => state.user.isAuthenticated);
+    const isReviewer = useSelector(state => state.user.isReviewer);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const isProfile = Boolean(useMatch('/profile')) || Boolean(useMatch('/update-password'));
@@ -28,11 +29,24 @@ export default function Header() {
     return (
         <Navbar bg="light" expand="lg" className="shadow">
             <Container>
-                <Navbar.Brand>Restaurant Reviews</Navbar.Brand>
+                <Navbar.Brand>
+                    <Link to="/">
+                        <img src="/logo.png" width="30" height="30" alt="logo"/>
+                    </Link>
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/" active={Boolean(useMatch('/'))}>Home</Nav.Link>
+                        {
+                            isAuthenticated && isReviewer
+                            &&
+                            <Nav.Link as={Link} to="/verifications" active={
+                                Boolean(useMatch('verifications')) ||
+                                Boolean(useMatch('/verifications/:restaurantId/ratings'))
+                            }
+                            >Verifications</Nav.Link>
+                        }
                     </Nav>
                     <Nav>
                         {isAuthenticated ?

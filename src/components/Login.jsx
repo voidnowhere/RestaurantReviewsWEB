@@ -1,6 +1,6 @@
 import Header from "./Header.jsx";
 import {Button, Container, FloatingLabel, Form, FormControl} from "react-bootstrap";
-import {useRef} from "react";
+import {useEffect, useRef} from "react";
 import axiosInstance from "../axiosInstance.js";
 import {Notify} from 'notiflix/build/notiflix-notify-aio';
 import {useNavigate} from "react-router-dom";
@@ -13,6 +13,13 @@ export default function Login() {
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
 
+    useEffect(() => {
+        if (window.location.search.includes('session-expired')) {
+            Notify.failure('Your session is expired!', {position: 'center-bottom'});
+            navigate('/login');
+        }
+    }, []);
+
     function submit(event) {
         event.preventDefault();
         axiosInstance.post('api/token/', {
@@ -22,7 +29,7 @@ export default function Login() {
             localStorage.setItem('access_token', response.data.access);
             localStorage.setItem('refresh_token', response.data.refresh);
             localStorage.setItem('user_type', response.data.type);
-            dispatch(userLogin({'userType': response.data.type}));
+            dispatch(userLogin());
             Notify.success('Successful login', {
                 position: 'center-bottom',
             });
