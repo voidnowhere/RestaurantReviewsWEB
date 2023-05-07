@@ -13,6 +13,7 @@ import {Confirm} from 'notiflix/build/notiflix-confirm-aio';
 
 function Restaurant() {
     const isAuthenticated = useSelector(state => state.user.isAuthenticated);
+    const isReviewer = useSelector(state => state.user.isReviewer);
     const [restaurant, setRestaurant] = useState(null);
     const {restaurantId} = useParams();
     const commentRef = useRef();
@@ -107,20 +108,24 @@ function Restaurant() {
                         <h4>Description</h4>
                         <p>{restaurant.description}</p>
                     </div>
-                    <Form className="mb-3">
-                        <div className="d-flex justify-content-between">
-                            <h5>Your rate</h5>
-                            <Rating start={0} stop={5} initialRating={stars}
-                                    onChange={value => setStars(value)}
-                                    emptySymbol={<img src={emptyStar} className="icon"/>}
-                                    fullSymbol={<img src={fullStar} className="icon"/>}/>
-                        </div>
-                        <Form.Control ref={commentRef} as="textarea" rows={3} className="mb-2"/>
-                        <div className="d-flex justify-content-end">
-                            <Button variant="outline-primary" type="submit" size="sm"
-                                    onClick={handleSubmit}>Submit</Button>
-                        </div>
-                    </Form>
+                    {
+                        !isReviewer
+                        &&
+                        <Form className="mb-3">
+                            <div className="d-flex justify-content-between">
+                                <h5>Your rate</h5>
+                                <Rating start={0} stop={5} initialRating={stars}
+                                        onChange={value => setStars(value)}
+                                        emptySymbol={<img src={emptyStar} className="icon"/>}
+                                        fullSymbol={<img src={fullStar} className="icon"/>}/>
+                            </div>
+                            <Form.Control ref={commentRef} as="textarea" rows={3} className="mb-2"/>
+                            <div className="d-flex justify-content-end">
+                                <Button variant="outline-primary" type="submit" size="sm"
+                                        onClick={handleSubmit}>Submit</Button>
+                            </div>
+                        </Form>
+                    }
                     <div className="d-flex flex-column gap-3">
                         {
                             restaurant.ratings.map((rating, index) => (
